@@ -9,6 +9,9 @@ module.exports = {
     publicPath: '/dist/',
     //filename: 'build.js'
     filename:'z-menu.js',
+    library: 'z-menu',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
   },
   module: {
     rules: [
