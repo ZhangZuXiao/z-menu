@@ -1,7 +1,7 @@
 {
   "name": "z-menu",
   "description": "A Vue.js project",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "zzx <zhangzx22@lenovo.com>",
   "license": "MIT",
   "private": false,
@@ -10,7 +10,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "vue": "^2.5.11"
+    
   },
   "repository": {
     "type": "git",
