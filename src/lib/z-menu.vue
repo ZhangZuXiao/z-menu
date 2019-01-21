@@ -19,7 +19,6 @@
       zm_event(name) {
          this.$emit('zmClick',name);
       },
-      
     }
   }
 </script>
