@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    //filename: 'build.js'
+    //filename: 'build.js',
     filename:'z-menu.js',
     library: 'z-menu',
     libraryTarget: 'umd',

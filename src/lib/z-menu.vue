@@ -1,7 +1,46 @@
 <template>
-  <div class="z-menu">
-       <div class="z-menu-chunk" v-for="(item,index) in data">
-            <i @click="zm_event(item.name)">{{item.name}}</i> 
+  <div class="z-menu" :style="{width:minWidth}" @mouseover="em_mouseover" @mouseout="em_mouseout">
+       <div class="z-menu-chun-v" :style="{width:variate}">
+            <div class="z-menu-chunk-ov">
+                <div class="z-menu-chunk"  :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth}" :class="iconClass" @click="showDialog = true">
+                    <div class="z-menu-icon el-icon-menu" :style="{width:minWidth}"></div>
+                    <div class="z-menu-text">
+                          <span>总览</span>
+                          <span class="z-menu-icon-chunk"><img class="z-m-img" src="../assets/go.png"/></span> 
+                    </div>
+                </div>
+                <div class="z-menu-chunk"  v-for="(item,index) in data" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click="zm_event(item,null)">
+                    <div class="z-menu-icon" :style="{width:minWidth}">无</div>
+                    <div class="z-menu-text">
+                          <span>{{item.name}}</span> 
+                          <span class="z-menu-icon-chunk"><img class="z-m-img" src="../assets/go.png"/></span>
+                    </div>
+                </div>
+            </div>
+       </div>   
+       <div class="z-menu-dialog" :style="{left:maxWidth}" v-show="showDialog">
+            <span class="z-menu-close" @click="showDialog = false,em_changeView()">×</span>
+            <div class="z-menu-dialog-v">
+            <div class="z-menu-top-v">
+                  <div class="z-menu-c-search"><input class="z-menu-c-s-input" placeholder="请输入菜单关键字" v-model="searchValue" @input="searchMenu()"/></div>
+                  <div style="width:160px;"></div>
+            </div>
+            <div class="z-menu-bottom-v">
+                  <div class="z-menu-dialog-left">
+                      <div class="z-menu-dialog-tow" v-for="(item,index) in moduleData" :key="index">
+                            <div class="z-menu-m-title">{{item.name}}</div>
+                            <div class="z-menu-m-count" v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click="zm_event(moduleData,moduleDataId)"></div>
+                      </div>
+                  </div>
+                  <div class="z-menu-dialog-right">
+                      <div class="z-menu-vessel">
+                        <div class="z-menu-right-module"  v-for="(item,index) in data"  :key="index" :class="item.id == moduleDataId ? 'z-menu-module-active':''" @click="select_module(item,item.id)">
+                              <div>{{item.name}}</div> 
+                        </div>
+                      </div>
+                  </div>
+            </div>
+            </div>
        </div>
   </div>
 </template>
@@ -9,21 +48,134 @@
 <script>
   export default {
     name: 'z-menu',
-    props: ['data','type'],
+    props: ['data','iconClass','zm-selected'],
     data () {
       return {
-         msg:'msg ccmt'
+         fontSize:'12px',         //字体图标大小
+         minWidth:'56px',         //缩小后模块宽高
+         maxWidth:'256px',        //展开后宽度
+         variate:'56px',          //伸缩变量
+         background:"#000",       //
+         activebg:"#000",         //交互颜色变量
+         show:false,              //伸缩状态
+         showDialog:false,        //总览是否显示
+         moduleDataId:null,            //当前选择模块ID
+         moduleData:this.data,    //总览当前查看模块
+         searchValue:"",          //总览检索
       }
     },
+    mounted(){
+      this.minWidth = this.minWidth ? this.minWidth : "56px";
+      this.maxWidth = this.maxWidth ? this.maxWidth : "256px";
+      this.fontSize = this.minWidth.split('px')[0] * .25 +"px";
+      this.variate = this.minWidth;
+      this.moduleDataId = this.data[0].id;
+      this.moduleData = this.data;
+      this.searchMenu();
+    },
     methods: {
-      zm_event(name) {
-         this.$emit('zmClick',name);
+      searchMenu(){
+         let list = this.searchValue.replace(/ /g,"").split("");
+            for(let i = 0;i<this.moduleData.length;i++){
+              let l = this.moduleData[i].childMenus;
+              for(let k = 0;k<l.length;k++){
+                  let m = l[k].name;
+                  for(let j = 0;j<list.length;j++){
+                     let z = '/'+list[j]+'/g';
+                     z = eval(z);
+                     m = m.replace(z,"<span style='color:red'>"+list[j]+"</span>");
+                  }
+                  let newData = {
+                    "html":m,
+                    "id":l[k].id,
+                    "name":l[k].name,
+                    "orderNo":l[k].orderNo,
+                    "pid":l[k].pid,
+                    "type":l[k].type,
+                    "url":l[k].url
+                  }
+                  l[k] = newData;  
+              }
+            }
       },
+      select_module(item,id){
+           this.moduleDataId = id;
+           this.moduleData = this.data;
+      },
+      zm_event(name,rouet) {
+         this.$emit('zmClick',name,rouet);
+      },
+      em_mouseover(){
+        if(this.showDialog){this.show = true;}else{this.show = true;}
+        this.em_changeView();
+      },
+      em_mouseout(){
+        if(this.showDialog){this.show = true;}else{this.show = false;}
+        this.em_changeView();
+      },
+      em_changeView(){
+         if(this.show){
+            this.variate = this.maxWidth;
+            this.activebg =  "#409eff !important";
+         }else{
+            this.variate = this.minWidth;
+            this.activebg = "#000";
+         }
+      }
     }
   }
 </script>
 
-<style>
-  .z-menu{background: #000;width: 56px;height: 100%;float: left;color: #fff;}
-  .z-menu-chunk{width: 100%;height: 56px;background: red;}
+<style  lang="scss">
+  .z-menu{background: #000;height: 100%;float: left;color: #fff;user-select: none;position: relative;box-sizing: border-box;}
+  .z-menu-chun-v{position: absolute;height: 100%;z-index: 2;background: #000;top: 0;transition: width .3s;overflow: hidden;}
+  .z-menu-chunk{width: 100%;cursor: pointer;text-align: center;display: flex;justify-content: space-between;transition: all 1s;box-sizing: border-box;border-bottom: 3px solid #000;
+               .z-menu-chunk-ov{overflow: hidden;width: 100%;height: 100%;position: relative;}
+               .z-menu-icon-chunk{display: block;position: absolute;right: 15px;width: 20px;height: 20px;top:5px;
+                                                  .z-m-img{width: 100%;height: 100%;}
+               }
+               .z-menu-icon{text-align: center;height: 100%;}
+               .z-menu-text{flex: 1;height: 100%;text-align: left;font-size: 13px;position: relative;}
+  }
+  .z-menu-chunk:hover{background: #323232 !important;border-bottom: 3px solid #323232;}
+  .z-menu-chunk-active{border-bottom: 3px solid #409eff !important;}
+  .z-menu-dialog{width: 720px;height: 520px;position: absolute;background: #fff;top: 0;z-index: 3;box-shadow: 0px 0px 10px #ccc;position: relative;padding: 20px;
+                .z-menu-dialog-v{width: 100%;height: 100%;}
+                .z-menu-top-v{width: 100%;height: 50px;position: relative;display: flex;justify-content: space-between;}
+                .z-menu-bottom-v{width: 100%;height: 470px; flex: 1;display: flex;justify-content: space-between;}
+                .z-menu-close{font-family: none !important;z-index: 99;font-size: 30px;display: block;position: absolute;width: 25px;height: 25px;right: 5px;top: 5px;text-align: center;line-height: 25px;color: #666;cursor: pointer;box-sizing: border-box;}
+                 .z-menu-dialog-left{height: 100%;flex: 1;overflow-x: hidden;overflow-y: auto;display: flex;flex-wrap: wrap;align-content: flex-start;position: relative;box-sizing: border-box;
+                                     .z-menu-dialog-tow{flex: 0 0 33.33%;min-height: 80px;color: #999;padding: 10px;box-sizing: border-box;font-size: 13px;text-align: left;
+                                                        .z-menu-m-title{font-weight: 600;color: #000;margin-bottom: 20px;}
+                                                        .z-menu-m-count{line-height: 25px;color: #999;cursor: pointer;}
+                                                        .z-menu-m-count:hover{color: #409eff;}
+                                     }
+                 }
+                 .z-menu-c-search{width: 100%;height: 50px;background: #fff;padding: 0 10px;box-sizing: border-box;flex:1;
+                                  .z-menu-c-s-input{width: 100%;height: 40px;line-height: 40px;padding-left: 50px;border:1px solid #409eff;border-radius: 4px;box-sizing: border-box;outline:none;background: url('../assets/search.png');background-repeat:no-repeat;background-position: 14px 7px;    background-size: 25px;}
+                                  .z-menu-c-s-input::-webkit-input-placeholder{
+                                          color: #b2b2b2 !important;
+                                  }
+                 }
+                 .z-menu-dialog-right{height: 100%;width: 150px;box-sizing: border-box;
+                                     .z-menu-vessel{width: 100%;height: auto;border-left: 2px solid #ccc;}
+                                     .z-menu-right-module{width: 100%;height: 30px;line-height: 30px;font-size: 13px;color: #999;text-align: left;cursor: pointer;padding-left: 10px;}
+                                     .z-menu-right-module:hover{color: #409eff;}
+                                     .z-menu-module-active{color: #409eff;}
+                 }
+                 .z-menu-dialog-left::-webkit-scrollbar {/*滚动条整体样式*/
+                    width: 7px;     /*高宽分别对应横竖滚动条的尺寸*/
+                    height: 1px;
+                 }
+                 .z-menu-dialog-left::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+                        border-radius: 7px;
+                        -webkit-box-shadow: inset 0 0 7px #cccccc;
+                        background: #cccccc;
+                 }
+                .z-menu-dialog-left::-webkit-scrollbar-track {/*滚动条里面轨道*/
+                        -webkit-box-shadow: inset 0 0 10px #cccccc;
+                        border-radius: 7px;
+                }
+  }
+  .z-menu-dialog:before{width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-right: 7px solid #fff;content: " "; position: absolute;left: -7px;top: 22px;}
 </style>
