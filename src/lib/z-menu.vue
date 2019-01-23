@@ -69,7 +69,7 @@
       this.maxWidth = this.maxWidth ? this.maxWidth : "256px";
       this.fontSize = this.minWidth.split('px')[0] * .25 +"px";
       this.variate = this.minWidth;
-      this.moduleDataId = this.data[0].id;
+      this.moduleDataId = this.zmSelected;
       this.moduleData = this.data;
       this.searchMenu();
     },
