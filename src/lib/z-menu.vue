@@ -3,7 +3,7 @@
        <div class="z-menu-chun-v" :style="{width:variate}">
             <div class="z-menu-chunk-ov">
                 <div class="z-menu-chunk"  :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth}" :class="iconClass" @click="showDialog = true">
-                    <div class="z-menu-icon el-icon-menu" :style="{width:minWidth}"></div>
+                    <div class="z-menu-icon el-icon-menu" :style="{width:minWidth,lineHeight:minWidth}"></div>
                     <div class="z-menu-text">
                           <span>总览</span>
                           <span class="z-menu-icon-chunk"><img class="z-m-img" src="../assets/go.png"/></span> 
@@ -127,19 +127,19 @@
 </script>
 
 <style  lang="scss">
-  .z-menu{background: #000;height: 100%;float: left;color: #fff;user-select: none;position: relative;box-sizing: border-box;}
+  .z-menu{background: #000;height: 100%;float: left;color: #fff;user-select: none;position: absolute;box-sizing: border-box;}
   .z-menu-chun-v{position: absolute;height: 100%;z-index: 2;background: #000;top: 0;transition: width .3s;overflow: hidden;}
   .z-menu-chunk{width: 100%;cursor: pointer;text-align: center;display: flex;justify-content: space-between;transition: all 1s;box-sizing: border-box;border-bottom: 3px solid #000;
                .z-menu-chunk-ov{overflow: hidden;width: 100%;height: 100%;position: relative;}
                .z-menu-icon-chunk{display: block;position: absolute;right: 15px;width: 20px;height: 20px;top:5px;
                                                   .z-m-img{width: 100%;height: 100%;}
                }
-               .z-menu-icon{text-align: center;height: 100%;}
+               .z-menu-icon{text-align: center;height: 100%;font-size: 20px;}
                .z-menu-text{flex: 1;height: 100%;text-align: left;font-size: 13px;position: relative;}
   }
   .z-menu-chunk:hover{background: #323232 !important;border-bottom: 3px solid #323232;}
   .z-menu-chunk-active{border-bottom: 3px solid #409eff !important;}
-  .z-menu-dialog{width: 720px;height: 520px;position: absolute;background: #fff;top: 0;z-index: 3;box-shadow: 0px 0px 10px #ccc;position: relative;padding: 20px;
+  .z-menu-dialog{width: 720px;height: 520px;position: absolute;background: #fff;top: 0;z-index: 99999;box-shadow: 0px 0px 10px #ccc;position: relative;padding: 20px;
                 .z-menu-dialog-v{width: 100%;height: 100%;}
                 .z-menu-top-v{width: 100%;height: 50px;position: relative;display: flex;justify-content: space-between;}
                 .z-menu-bottom-v{width: 100%;height: 470px; flex: 1;display: flex;justify-content: space-between;}
