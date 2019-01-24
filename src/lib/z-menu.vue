@@ -6,14 +6,14 @@
                     <div class="z-menu-icon el-icon-menu" :style="{width:minWidth,lineHeight:minWidth}"></div>
                     <div class="z-menu-text">
                           <span>总览</span>
-                          <span class="z-menu-icon-chunk"><img class="z-m-img" src="../assets/go.png"/></span> 
+                          <span class="z-menu-icon-chunk el-icon-arrow-right"></span> 
                     </div>
                 </div>
                 <div class="z-menu-chunk"  v-for="(item,index) in data" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click="zm_event(item,null)">
-                    <div class="z-menu-icon" :style="{width:minWidth}">无</div>
+                    <div class="z-menu-icon" :style="{width:minWidth}"></div>
                     <div class="z-menu-text">
                           <span>{{item.name}}</span> 
-                          <span class="z-menu-icon-chunk"><img class="z-m-img" src="../assets/go.png"/></span>
+                          <span class="z-menu-icon-chunk el-icon-arrow-right"></span>
                     </div>
                 </div>
             </div>
@@ -22,14 +22,14 @@
             <span class="z-menu-close" @click="showDialog = false,em_changeView()">×</span>
             <div class="z-menu-dialog-v">
             <div class="z-menu-top-v">
-                  <div class="z-menu-c-search"><input class="z-menu-c-s-input" placeholder="请输入菜单关键字" v-model="searchValue" @input="searchMenu()"/></div>
+                  <div class="z-menu-c-search"><input class="z-menu-c-s-input" placeholder="请输入菜单关键字" v-model="searchValue" @input="searchMenu()"/><span class="search-icon-input el-icon-search"></span></div>
                   <div style="width:160px;"></div>
             </div>
             <div class="z-menu-bottom-v">
                   <div class="z-menu-dialog-left">
                       <div class="z-menu-dialog-tow" v-for="(item,index) in moduleData" :key="index">
                             <div class="z-menu-m-title">{{item.name}}</div>
-                            <div class="z-menu-m-count" v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click="zm_event(moduleData,moduleDataId)"></div>
+                            <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click="zm_event(moduleData,moduleDataId)"></div>
                       </div>
                   </div>
                   <div class="z-menu-dialog-right">
@@ -69,22 +69,20 @@
       this.maxWidth = this.maxWidth ? this.maxWidth : "256px";
       this.fontSize = this.minWidth.split('px')[0] * .25 +"px";
       this.variate = this.minWidth;
+      console.log(this.zmSelected);
       this.moduleDataId = this.zmSelected;
-      this.moduleData = this.data;
-      this.searchMenu();
+      this.present_module();
     },
     methods: {
       searchMenu(){
-         let list = this.searchValue.replace(/ /g,"").split("");
+           let list = this.searchValue.trim();
             for(let i = 0;i<this.moduleData.length;i++){
-              let l = this.moduleData[i].childMenus;
+              let l = this.val(this.moduleData,[i,'childMenus'],[]);
               for(let k = 0;k<l.length;k++){
                   let m = l[k].name;
-                  for(let j = 0;j<list.length;j++){
-                     let z = '/'+list[j]+'/g';
+                     let z = '/'+list+'/g';
                      z = eval(z);
-                     m = m.replace(z,"<span style='color:red'>"+list[j]+"</span>");
-                  }
+                     m = m.replace(z,"<span style='color:red'>"+list+"</span>");
                   let newData = {
                     "html":m,
                     "id":l[k].id,
@@ -92,15 +90,25 @@
                     "orderNo":l[k].orderNo,
                     "pid":l[k].pid,
                     "type":l[k].type,
-                    "url":l[k].url
+                    "url":l[k].url,
+                    'childMenus':l[k].childMenus
                   }
                   l[k] = newData;  
               }
             }
       },
+      present_module(){
+          for(let i=0;i<this.data.length;i++){
+            if(this.data[i].id == this.zmSelected){
+               this.moduleData = this.data[i].childMenus;
+               this.searchMenu();
+            }
+          }
+      },
       select_module(item,id){
            this.moduleDataId = id;
-           this.moduleData = this.data;
+           console.log(item);
+           this.moduleData = item.childMenus;
       },
       zm_event(name,rouet) {
          this.$emit('zmClick',name,rouet);
@@ -121,7 +129,25 @@
             this.variate = this.minWidth;
             this.activebg = "#000";
          }
-      }
+      },
+      val:function(data,key,back){
+        				    back=(typeof back==="undefined" ? "--":back);
+        					try {
+        						if(typeof key ==="string"){
+        							return (data[key] ? data[key]:back);
+        						}else if(typeof key ==="object" && key instanceof Array){
+        							var res=data;
+        							for(var i=0;i<key.length;i++){
+        								res=res[key[i]];
+        							}
+        							return (res ? res:back);
+        						}else{
+        							return (data[key] ? data[key]:back);
+        						}
+        					} catch (e) {
+        						return  back;
+        					}
+      },
     }
   }
 </script>
@@ -131,8 +157,7 @@
   .z-menu-chun-v{position: absolute;height: 100%;z-index: 2;background: #000;top: 0;transition: width .3s;overflow: hidden;}
   .z-menu-chunk{width: 100%;cursor: pointer;text-align: center;display: flex;justify-content: space-between;transition: all 1s;box-sizing: border-box;border-bottom: 3px solid #000;
                .z-menu-chunk-ov{overflow: hidden;width: 100%;height: 100%;position: relative;}
-               .z-menu-icon-chunk{display: block;position: absolute;right: 15px;width: 20px;height: 20px;top:5px;
-                                                  .z-m-img{width: 100%;height: 100%;}
+               .z-menu-icon-chunk{display: block;position: absolute;right: 15px;width: 20px;height: 20px;top:5px;text-align: center;line-height: 20px;color: #fff;
                }
                .z-menu-icon{text-align: center;height: 100%;font-size: 20px;}
                .z-menu-text{flex: 1;height: 100%;text-align: left;font-size: 13px;position: relative;}
@@ -146,13 +171,15 @@
                 .z-menu-close{font-family: none !important;z-index: 99;font-size: 30px;display: block;position: absolute;width: 25px;height: 25px;right: 5px;top: 5px;text-align: center;line-height: 25px;color: #666;cursor: pointer;box-sizing: border-box;}
                  .z-menu-dialog-left{height: 100%;flex: 1;overflow-x: hidden;overflow-y: auto;display: flex;flex-wrap: wrap;align-content: flex-start;position: relative;box-sizing: border-box;
                                      .z-menu-dialog-tow{flex: 0 0 33.33%;min-height: 80px;color: #999;padding: 10px;box-sizing: border-box;font-size: 13px;text-align: left;
-                                                        .z-menu-m-title{font-weight: 600;color: #000;margin-bottom: 20px;}
+                                                        .z-menu-m-title{font-weight: 600;color: #000;margin-bottom: 20px;cursor: pointer;}
+                                                        .z-menu-m-title:hover{color: #409eff;}
                                                         .z-menu-m-count{line-height: 25px;color: #999;cursor: pointer;}
                                                         .z-menu-m-count:hover{color: #409eff;}
                                      }
                  }
                  .z-menu-c-search{width: 100%;height: 50px;background: #fff;padding: 0 10px;box-sizing: border-box;flex:1;
-                                  .z-menu-c-s-input{width: 100%;height: 40px;line-height: 40px;padding-left: 50px;border:1px solid #409eff;border-radius: 4px;box-sizing: border-box;outline:none;background: url('../assets/search.png');background-repeat:no-repeat;background-position: 14px 7px;    background-size: 25px;}
+                                  .search-icon-input{position: absolute;width: 30px;height: 30px;left: 20px;top: 5px;font-size: 22px;}
+                                  .z-menu-c-s-input{width: 100%;height: 40px;line-height: 40px;padding-left: 50px;border:1px solid #409eff;border-radius: 4px;box-sizing: border-box;outline:none;}
                                   .z-menu-c-s-input::-webkit-input-placeholder{
                                           color: #b2b2b2 !important;
                                   }
