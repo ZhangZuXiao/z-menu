@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div class="z-menu-chunk"  v-for="(item,index) in data" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click="zm_event(item,null)">
-                    <div class="z-menu-icon" :style="{width:minWidth}"></div>
+                    <div class="z-menu-icon" :style="{width:minWidth,lineHeight:minWidth}" :class="item.imgUrl"></div>
                     <div class="z-menu-text">
                           <span>{{item.name}}</span> 
                           <span class="z-menu-icon-chunk el-icon-arrow-right"></span>
@@ -28,8 +28,8 @@
             <div class="z-menu-bottom-v">
                   <div class="z-menu-dialog-left">
                       <div class="z-menu-dialog-tow" v-for="(item,index) in moduleData" :key="index">
-                            <div class="z-menu-m-title">{{item.name}}</div>
-                            <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click="zm_event(moduleData,moduleDataId)"></div>
+                            <div class="z-menu-m-title" @click="zm_event(moduleData,item.url)">{{item.name}}</div>
+                            <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click="zm_event(moduleData,item.url)"></div>
                       </div>
                   </div>
                   <div class="z-menu-dialog-right">
