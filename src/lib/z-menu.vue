@@ -71,9 +71,9 @@
          show:false,              //伸缩状态
          showDialog:false,        //总览是否显示
          moduleDataId:null,       //当前选择模块ID
-         moduleData:this.data,    //总览当前查看模块
+         moduleData:this.present_module(),    //总览当前查看模块
          searchValue:"",          //总览检索
-         submenuData:[],          //子菜单数据
+         submenuData:this.submenuData_module(),          //子菜单数据
       }
     },
     mounted(){
@@ -82,16 +82,16 @@
       this.fontSize = this.minWidth.split('px')[0] * .25 +"px";
       this.variate = this.minWidth;
       this.moduleDataId = this.zmSelected;
-      this.present_module();
-      this.submenuData_module();
     },
     methods: {
       submenuData_module(){
+          let list = [];
           for(let i=0;i<this.data.length;i++){
             if(this.data[i].id == this.zmSelected){
-               this.submenuData = this.formatSubmenuData(this.data[i].childMenus);
+               list = this.formatSubmenuData(this.data[i].childMenus);
             }
           }
+          return list;
       },
       submenuEvent(item){
         //console.log(item)
@@ -154,14 +154,14 @@
             }
       },
       present_module(){
+        let list = [];
           for(let i=0;i<this.data.length;i++){
-            console.log(this.zmSelected+'---::'+this.data[i].id);
             if(this.data[i].id == this.zmSelected){
-               this.moduleData = this.data[i].childMenus;
-               this.submenuData = this.data[i].childMenus;
-               this.searchMenu();
+               list = this.data[i].childMenus;
+              // this.searchMenu();
             }
           }
+          return list;
       },
       select_module(item,id){
            this.moduleDataId = id;
