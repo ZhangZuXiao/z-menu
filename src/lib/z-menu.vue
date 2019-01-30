@@ -83,9 +83,16 @@
       this.variate = this.minWidth;
       this.moduleDataId = this.zmSelected;
       this.present_module();
-      this.submenuData = this.formatSubmenuData(this.submenuData);
+      this.submenuData_module();
     },
     methods: {
+      submenuData_module(){
+          for(let i=0;i<this.data.length;i++){
+            if(this.data[i].id == this.zmSelected){
+               this.submenuData = this.formatSubmenuData(this.data[i].childMenus);
+            }
+          }
+      },
       submenuEvent(item){
         //console.log(item)
         if(item.childMenus.length > 0){
@@ -148,6 +155,7 @@
       },
       present_module(){
           for(let i=0;i<this.data.length;i++){
+            console.log(this.zmSelected+'---::'+this.data[i].id);
             if(this.data[i].id == this.zmSelected){
                this.moduleData = this.data[i].childMenus;
                this.submenuData = this.data[i].childMenus;
@@ -227,9 +235,9 @@
   .z-menu-chun-v{position: absolute;height: 100%;z-index: 2;background: #000;top: 0;transition: width .3s;overflow: hidden;}
   .z-menu-chunk{width: 100%;cursor: pointer;text-align: center;display: flex;justify-content: space-between;transition: all 1s;box-sizing: border-box;border-bottom: 3px solid #000;
                .z-menu-chunk-ov{overflow: hidden;width: 100%;height: 100%;position: relative;}
-               .z-menu-icon-chunk{display: block;position: absolute;right: 15px;width: 20px;height: 20px;top:19px;text-align: center;line-height: 20px;color: #fff;font-size: 12px;
+               .z-menu-icon-chunk{display: block;position: absolute;right: 15px;width: 20px;height: 20px;top:13px;text-align: center;line-height: 20px;color: #fff;font-size: 12px;
                }
-               .z-menu-icon{text-align: center;height: 100%;font-size: 20px;}
+               .z-menu-icon{text-align: center;height: 100%;font-size: 17px;}
                .z-menu-text{flex: 1;height: 100%;text-align: left;font-size: 13px;position: relative;}
   }
   .z-menu-chunk:hover{background: #323232 !important;border-bottom: 3px solid #323232;}
