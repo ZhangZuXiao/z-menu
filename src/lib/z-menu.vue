@@ -82,6 +82,8 @@
       this.fontSize = this.minWidth.split('px')[0] * .25 +"px";
       this.variate = this.minWidth;
       this.moduleDataId = this.zmSelected;
+      //this.moduleData  = this.present_module();
+     // this.submenuData = this.submenuData_module();
     },
     methods: {
       submenuData_module(){
@@ -91,6 +93,7 @@
                list = this.formatSubmenuData(this.data[i].childMenus);
             }
           }
+          console.log(list);
           return list;
       },
       submenuEvent(item){
@@ -165,7 +168,6 @@
       },
       select_module(item,id){
            this.moduleDataId = id;
-           console.log(item);
            this.moduleData = item.childMenus;
       },
       zm_event(name,rouet) {
