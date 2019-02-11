@@ -60,9 +60,31 @@
   export default {
     name: 'z-menu',
     props: ['data','iconClass','zm-selected'],
+    computed: {
+      submenuData(){
+          let list = [];
+          for(let i=0;i<this.data_.length;i++){
+            if(this.data_[i].id == this.zmSelected){
+               list = this.formatSubmenuData(this.data_[i].childMenus);
+            }
+          }
+          console.log(this.data_);
+          return list;
+      },
+      moduleData(){
+        let list = [];
+          for(let i=0;i<this.data.length;i++){
+            if(this.data[i].id == this.zmSelected){
+               list = this.data[i].childMenus;
+              // this.searchMenu();
+            }
+          }
+          return list;
+      },
+    },
     data () {
       return {
-         data:this.data,
+         data_:this.data,
          fontSize:'12px',         //字体图标大小
          minWidth:'45px',         //缩小后模块宽高
          maxWidth:'245px',        //展开后宽度
@@ -72,9 +94,9 @@
          show:false,              //伸缩状态
          showDialog:false,        //总览是否显示
          moduleDataId:null,       //当前选择模块ID
-         moduleData:this.present_module(),    //总览当前查看模块
+        // moduleData:this.present_module(),    //总览当前查看模块
          searchValue:"",          //总览检索
-         submenuData:this.submenuData_module(),          //子菜单数据
+        // submenuData:this.submenuData_module(),          //子菜单数据
       }
     },
     mounted(){
@@ -87,16 +109,7 @@
      // this.submenuData = this.submenuData_module();
     },
     methods: {
-      submenuData_module(){
-          let list = [];
-          for(let i=0;i<this.data.length;i++){
-            if(this.data[i].id == this.zmSelected){
-               list = this.formatSubmenuData(this.data[i].childMenus);
-            }
-          }
-          console.log(this.data);
-          return list;
-      },
+
       submenuEvent(item){
         //console.log(item)
         if(item.childMenus.length > 0){
@@ -156,16 +169,6 @@
                   l[k] = newData;  
               }
             }
-      },
-      present_module(){
-        let list = [];
-          for(let i=0;i<this.data.length;i++){
-            if(this.data[i].id == this.zmSelected){
-               list = this.data[i].childMenus;
-              // this.searchMenu();
-            }
-          }
-          return list;
       },
       select_module(item,id){
            this.moduleDataId = id;
