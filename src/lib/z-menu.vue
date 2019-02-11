@@ -3,14 +3,14 @@
         <div class="z-menu" :style="{width:minWidth}" @mouseover="em_mouseover" @mouseout="em_mouseout">
             <div class="z-menu-chun-v" :style="{width:variate}">
                   <div class="z-menu-chunk-ov">
-                      <div class="z-menu-chunk"  :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth}" :class="iconClass" @click="showDialog = true">
+                      <div class="z-menu-chunk"  :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth}" :class="iconClass" @click.stop="showDialog = true">
                           <div class="z-menu-icon el-icon-menu" :style="{width:minWidth,lineHeight:minWidth}"></div>
                           <div class="z-menu-text">
                                 <span>总览</span>
                                 <span class="z-menu-icon-chunk el-icon-arrow-right"></span> 
                           </div>
                       </div>
-                      <div class="z-menu-chunk"  v-for="(item,index) in data_" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click="zm_event(item,null)">
+                      <div class="z-menu-chunk"  v-for="(item,index) in data_" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click.stop="zm_event(item,null)">
                           <div class="z-menu-icon" :style="{width:minWidth,lineHeight:minWidth}" :class="item.imgUrl"></div>
                           <div class="z-menu-text">
                                 <span>{{item.name}}</span> 
@@ -20,7 +20,7 @@
                   </div>
             </div>   
             <div class="z-menu-dialog" :style="{left:maxWidth}" v-show="showDialog">
-                  <span class="z-menu-close" @click="showDialog = false,em_changeView()">×</span>
+                  <span class="z-menu-close" @click.stop="showDialog = false,em_changeView()">×</span>
                   <div class="z-menu-dialog-v">
                   <div class="z-menu-top-v">
                         <div class="z-menu-c-search"><input class="z-menu-c-s-input" placeholder="请输入菜单关键字" v-model="searchValue" @input="searchMenu()"/><span class="search-icon-input el-icon-search"></span></div>
@@ -29,13 +29,13 @@
                   <div class="z-menu-bottom-v">
                         <div class="z-menu-dialog-left">
                             <div class="z-menu-dialog-tow" v-for="(item,index) in moduleData" :key="index">
-                                  <div class="z-menu-m-title" @click="zm_event(item.url)">{{item.name}}</div>
-                                  <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click="zm_event(item.url)"></div>
+                                  <div class="z-menu-m-title" @click.stop="zm_event(item.url)">{{item.name}}</div>
+                                  <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click.stop="zm_event(item.url)"></div>
                             </div>
                         </div>
                         <div class="z-menu-dialog-right">
                             <div class="z-menu-vessel">
-                              <div class="z-menu-right-module"  v-for="(item,index) in data"  :key="index" :class="item.id == moduleDataId ? 'z-menu-module-active':''" @click="select_module(item,item.id)">
+                              <div class="z-menu-right-module"  v-for="(item,index) in data"  :key="index" :class="item.id == moduleDataId ? 'z-menu-module-active':''" @click.stop="select_module(item,item.id)">
                                     <div>{{item.name}}</div> 
                               </div>
                             </div>
@@ -46,9 +46,9 @@
         </div>
         <div class="z-memu-r-item">
                <ul class="z-menu-submenu">
-                  <li v-for="(item,index) in submenuData" :key="item.id"><div class="z-menu-submenu-v" @click.stop="submenuEvent(item)"><i class="z-m-i-v" :class="item.imgUrl"></i><span class="z-m-i-t">{{item.name}}</span><i v-if="item.childMenus.length > 0" class="z-m-i-v2 el-icon-arrow-down" :class="item.open ? 'z-m-open-icon':'z-m-close-icon'"></i></div>
+                  <li v-for="(item,index) in submenuData" :key="item.id" ><div class="z-menu-submenu-v" @click.stop="submenuEvent(item)" :class="item.active === true  ? 'z-menu-active':''"><i class="z-m-i-v" :class="item.imgUrl"></i><span class="z-m-i-t">{{item.name}}</span><i v-if="item.childMenus.length > 0" class="z-m-i-v2 el-icon-arrow-down" :class="item.open ? 'z-m-open-icon':'z-m-close-icon'"></i></div>
                       <ul v-if="item.childMenus !== null && item.childMenus !== 'null' " class="z-menu-submenu z-menu-submenu-unfold" :class="item.open ? 'z-m-open':'z-m-close'">
-                           <li class="" v-for="(row,i) in item.childMenus" :key="row.id"><div class="z-menu-submenu-v" @click.stop="submenuEvent(row)"><span class="z-m-i-t">{{row.name}}</span></div></li>
+                           <li class="" v-for="(row,i) in item.childMenus" :key="row.id"><div class="z-menu-submenu-v" @click.stop="submenuEvent(row)" :class="row.active === true  ? 'z-menu-active':''"><span class="z-m-i-t">{{row.name}}</span></div></li>
                       </ul>
                   </li>
                </ul>
@@ -68,8 +68,8 @@
                list = this.formatSubmenuData(this.data[i].childMenus);
             }
           }
-          console.log(list);
-          return list;
+          this.submenuData_ = list;
+          return this.submenuData_;
       },
       moduleData(){
         let list = [];
@@ -96,7 +96,8 @@
          moduleDataId:this.zmSelected,       //当前选择模块ID
         // moduleData:this.present_module(),    //总览当前查看模块
          searchValue:"",          //总览检索
-        // submenuData:this.submenuData_module(),          //子菜单数据
+         submenuData_:[],          //子菜单数据
+         closeDown:false,          //重新选择菜单时是否关闭其他菜单
       }
     },
     mounted(){
@@ -112,8 +113,21 @@
         if(item.childMenus.length > 0){
           item.open = !item.open;
         }else{
+           this.cancelData(this.submenuData_);
+           item.active = true;
            this.$emit('selectMenu',item);
         }
+      },
+      cancelData(list){
+          for(let i= 0;i<list.length;i++){
+               list[i].active = false;
+               if(this.closeDown){
+                 list[i].open = false;
+               }
+               if(list[i].childMenus.length > 0){
+                  this.cancelData(list[i].childMenus);
+               }
+          }
       },
       formatSubmenuData(list){
           let t = []
@@ -204,7 +218,7 @@
 
 <style  lang="scss">
   .z-m{width: 245px;height: 100%;box-sizing: border-box;user-select: none;}
-  .z-menu-active{background: #409eff;user-select: none;}
+  .z-menu-active{background: #409eff !important;user-select: none;}
   .z-memu-r-item{float: right;width: 200px;min-height: 100%;user-select: none;
                  .z-menu-submenu{list-style: none;position: relative;margin: 0;padding-left: 0;
                                  li{display: list-item;text-align: -webkit-match-parent;color: #fff;}

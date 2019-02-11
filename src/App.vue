@@ -23,7 +23,28 @@ export default {
                 {
                     "childMenus":[
                         {
-                            "childMenus":null,
+                            "childMenus":[
+                                {
+                                    "childMenus":null,
+                                    "id":"185",
+                                    "imgUrl":null,
+                                    "name":"账号管理",
+                                    "orderNo":"1",
+                                    "pid":"180",
+                                    "type":2,
+                                    "url":"/index/usermanage"
+                                },
+                                                        {
+                                    "childMenus":null,
+                                    "id":"186",
+                                    "imgUrl":null,
+                                    "name":"账号管理",
+                                    "orderNo":"1",
+                                    "pid":"180",
+                                    "type":2,
+                                    "url":"/index/usermanage"
+                                },
+                            ],
                             "id":"181",
                             "imgUrl":null,
                             "name":"客户管理",
