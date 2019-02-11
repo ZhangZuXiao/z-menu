@@ -62,6 +62,7 @@
     props: ['data','iconClass','zm-selected'],
     data () {
       return {
+         data:this.data,
          fontSize:'12px',         //字体图标大小
          minWidth:'45px',         //缩小后模块宽高
          maxWidth:'245px',        //展开后宽度
@@ -93,7 +94,7 @@
                list = this.formatSubmenuData(this.data[i].childMenus);
             }
           }
-          console.log(list);
+          console.log(this.data);
           return list;
       },
       submenuEvent(item){
