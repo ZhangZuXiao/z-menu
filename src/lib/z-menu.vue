@@ -10,7 +10,7 @@
                                 <span class="z-menu-icon-chunk el-icon-arrow-right"></span> 
                           </div>
                       </div>
-                      <div class="z-menu-chunk"  v-for="(item,index) in data" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click="zm_event(item,null)">
+                      <div class="z-menu-chunk"  v-for="(item,index) in data_" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click="zm_event(item,null)">
                           <div class="z-menu-icon" :style="{width:minWidth,lineHeight:minWidth}" :class="item.imgUrl"></div>
                           <div class="z-menu-text">
                                 <span>{{item.name}}</span> 
@@ -29,8 +29,8 @@
                   <div class="z-menu-bottom-v">
                         <div class="z-menu-dialog-left">
                             <div class="z-menu-dialog-tow" v-for="(item,index) in moduleData" :key="index">
-                                  <div class="z-menu-m-title" @click="zm_event(moduleData,item.url)">{{item.name}}</div>
-                                  <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click="zm_event(moduleData,item.url)"></div>
+                                  <div class="z-menu-m-title" @click="zm_event(item.url)">{{item.name}}</div>
+                                  <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click="zm_event(item.url)"></div>
                             </div>
                         </div>
                         <div class="z-menu-dialog-right">
@@ -63,18 +63,18 @@
     computed: {
       submenuData(){
           let list = [];
-          for(let i=0;i<this.data_.length;i++){
-            if(this.data_[i].id == this.zmSelected){
-               list = this.formatSubmenuData(this.data_[i].childMenus);
+          for(let i=0;i<this.data.length;i++){
+            if(this.data[i].id == this.zmSelected){
+               list = this.formatSubmenuData(this.data[i].childMenus);
             }
           }
-          console.log(this.data_);
+          console.log(list);
           return list;
       },
       moduleData(){
         let list = [];
           for(let i=0;i<this.data.length;i++){
-            if(this.data[i].id == this.zmSelected){
+            if(this.data[i].id == this.moduleDataId){
                list = this.data[i].childMenus;
               // this.searchMenu();
             }
@@ -93,7 +93,7 @@
          activebg:"#000",         //交互颜色变量
          show:false,              //伸缩状态
          showDialog:false,        //总览是否显示
-         moduleDataId:null,       //当前选择模块ID
+         moduleDataId:this.zmSelected,       //当前选择模块ID
         // moduleData:this.present_module(),    //总览当前查看模块
          searchValue:"",          //总览检索
         // submenuData:this.submenuData_module(),          //子菜单数据
@@ -105,11 +105,8 @@
       this.fontSize = this.minWidth.split('px')[0] * .25 +"px";
       this.variate = this.minWidth;
       this.moduleDataId = this.zmSelected;
-      //this.moduleData  = this.present_module();
-     // this.submenuData = this.submenuData_module();
     },
     methods: {
-
       submenuEvent(item){
         //console.log(item)
         if(item.childMenus.length > 0){
@@ -135,17 +132,6 @@
                  });
           }
           return t;
-          // for(let i=0;i<this.data.length;i++){
-          //   if(this.data[i].id == this.zmSelected){
-          //      this.submenuData = this.val(this.data,[i,'childMenus'],0);
-          //   }
-          // }
-          // if(this.submenuData.length > 0){
-          //    let list = [];
-          //    for(let i = 0;i<this.submenuData.length;i++){
-                 
-          //    }
-          // }
       },
       searchMenu(){
            let list = this.searchValue.trim();
@@ -172,7 +158,7 @@
       },
       select_module(item,id){
            this.moduleDataId = id;
-           this.moduleData = item.childMenus;
+           //this.moduleData = item.childMenus;
       },
       zm_event(name,rouet) {
          this.$emit('zmClick',name,rouet);
