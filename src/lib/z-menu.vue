@@ -10,7 +10,7 @@
                                 <span class="z-menu-icon-chunk el-icon-arrow-right"></span> 
                           </div>
                       </div>
-                      <div class="z-menu-chunk"  v-for="(item,index) in data_" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click.stop="zm_event(item,null)">
+                      <div class="z-menu-chunk"  v-for="(item,index) in data" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click.stop="zm_event(item,null)">
                           <div class="z-menu-icon" :style="{width:minWidth,lineHeight:minWidth}" :class="item.imgUrl"></div>
                           <div class="z-menu-text">
                                 <span>{{item.name}}</span> 
@@ -30,7 +30,7 @@
                         <div class="z-menu-dialog-left">
                             <div class="z-menu-dialog-tow" v-for="(item,index) in moduleData" :key="index">
                                   <div class="z-menu-m-title" @click.stop="zm_event(item.url)">{{item.name}}</div>
-                                  <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click.stop="zm_event(item.url)"></div>
+                                  <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click.stop="zm_event(m.url)"></div>
                             </div>
                         </div>
                         <div class="z-menu-dialog-right">
@@ -47,7 +47,7 @@
         <div class="z-memu-r-item">
                <ul class="z-menu-submenu">
                   <li v-for="(item,index) in submenuData" :key="item.id" ><div class="z-menu-submenu-v" @click.stop="submenuEvent(item)" :class="item.active === true  ? 'z-menu-active':''"><i class="z-m-i-v" :class="item.imgUrl"></i><span class="z-m-i-t">{{item.name}}</span><i v-if="item.childMenus.length > 0" class="z-m-i-v2 el-icon-arrow-down" :class="item.open ? 'z-m-open-icon':'z-m-close-icon'"></i></div>
-                      <ul v-if="item.childMenus !== null && item.childMenus !== 'null' " class="z-menu-submenu z-menu-submenu-unfold" :class="item.open ? 'z-m-open':'z-m-close'">
+                      <ul v-if="item.childMenus !== null && item.childMenus !== 'null' " class="z-menu-submenu z-menu-submenu-unfold" :class="item.open ? 'z-m-open':'z-m-close'" :style="{height: (item.open ? item.childMenus.length * 45+'px':'0px')}">
                            <li class="" v-for="(row,i) in item.childMenus" :key="row.id"><div class="z-menu-submenu-v" @click.stop="submenuEvent(row)" :class="row.active === true  ? 'z-menu-active':''"><span class="z-m-i-t">{{row.name}}</span></div></li>
                       </ul>
                   </li>
@@ -76,10 +76,11 @@
           for(let i=0;i<this.data.length;i++){
             if(this.data[i].id == this.moduleDataId){
                list = this.data[i].childMenus;
-              // this.searchMenu();
             }
           }
-          return list;
+          this.moduleData_ = list;
+          this.searchMenu();
+          return this.moduleData_;
       },
     },
     data () {
@@ -94,7 +95,7 @@
          show:false,              //伸缩状态
          showDialog:false,        //总览是否显示
          moduleDataId:this.zmSelected,       //当前选择模块ID
-        // moduleData:this.present_module(),    //总览当前查看模块
+         moduleData_:[],    //总览当前查看模块
          searchValue:"",          //总览检索
          submenuData_:[],          //子菜单数据
          closeDown:false,          //重新选择菜单时是否关闭其他菜单
@@ -149,8 +150,8 @@
       },
       searchMenu(){
            let list = this.searchValue.trim();
-            for(let i = 0;i<this.moduleData.length;i++){
-              let l = this.val(this.moduleData,[i,'childMenus'],[]);
+            for(let i = 0;i<this.moduleData_.length;i++){
+              let l = this.val(this.moduleData_,[i,'childMenus'],[]);
               for(let k = 0;k<l.length;k++){
                   let m = l[k].name;
                      let z = '/'+list+'/g';
@@ -224,7 +225,7 @@
                                  li{display: list-item;text-align: -webkit-match-parent;color: #fff;}
                                  .z-menu-submenu-v{height: 45px;line-height: 45px;text-align: center;font-size:13px;text-align: left;padding: 0 20px;position: relative;cursor: pointer;
                                                   .z-m-i-v{margin-right: 10px;}
-                                                  .z-m-i-v2{vertical-align: middle;position: absolute;top: 0;right: 20px;-webkit-transition: -webkit-transform .3s; transition: -webkit-transform .3s; transition: transform .3s; transition: transform .3s, -webkit-transform .3s; transition: transform .3s,-webkit-transform .3s;font-size: 12px;}
+                                                  .z-m-i-v2{line-height: 45px;vertical-align: middle;position: absolute;top: 0;right: 20px;-webkit-transition: -webkit-transform .3s; transition: -webkit-transform .3s; transition: transform .3s; transition: transform .3s, -webkit-transform .3s; transition: transform .3s,-webkit-transform .3s;font-size: 12px;}
                                  }
                                  .z-menu-submenu-v:hover{background-color: rgb(0, 33, 51);}
                  }
