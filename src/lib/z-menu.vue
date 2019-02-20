@@ -46,9 +46,9 @@
         </div>
         <div class="z-memu-r-item">
                <ul class="z-menu-submenu">
-                  <li v-for="(item,index) in submenuData" :key="item.id" ><div class="z-menu-submenu-v" @click.stop="submenuEvent(item)" :class="item.active === true  ? 'z-menu-active':''"><i class="z-m-i-v" :class="item.imgUrl"></i><span class="z-m-i-t">{{item.name}}</span><i v-if="item.childMenus.length > 0" class="z-m-i-v2 el-icon-arrow-down" :class="item.open ? 'z-m-open-icon':'z-m-close-icon'"></i></div>
+                  <li v-for="(item,index) in submenuData" :key="item.id" ><div class="z-menu-submenu-v" @click.stop="submenuEvent(item)" :class="zRouet == item.url   ? 'z-menu-active':''"><i class="z-m-i-v" :class="item.imgUrl"></i><span class="z-m-i-t">{{item.name}}</span><i v-if="item.childMenus.length > 0" class="z-m-i-v2 el-icon-arrow-down" :class="item.open ? 'z-m-open-icon':'z-m-close-icon'"></i></div>
                       <ul v-if="item.childMenus !== null && item.childMenus !== 'null' " class="z-menu-submenu z-menu-submenu-unfold" :class="item.open ? 'z-m-open':'z-m-close'" :style="{height: (item.open ? item.childMenus.length * 45+'px':'0px')}">
-                           <li class="" v-for="(row,i) in item.childMenus" :key="row.id"><div class="z-menu-submenu-v" @click.stop="submenuEvent(row)" :class="row.active === true  ? 'z-menu-active':''"><span class="z-m-i-t">{{row.name}}</span></div></li>
+                           <li class="" v-for="(row,i) in item.childMenus" :key="row.id"><div class="z-menu-submenu-v" @click.stop="submenuEvent(row)" :class="zRouet == row.url ? 'z-menu-active':''"><span class="z-m-i-t">{{row.name}}</span></div></li>
                       </ul>
                   </li>
                </ul>
@@ -59,7 +59,7 @@
 <script>
   export default {
     name: 'z-menu',
-    props: ['data','iconClass','zm-selected'],
+    props: ['data','iconClass','zm-selected','z-rouet'],
     computed: {
       submenuData(){
           let list = [];
@@ -154,9 +154,19 @@
                       "pid":this.val(list,[i,'pid'],0),
                       "type":this.val(list,[i,'type'],0),
                       "url":this.val(list,[i,'url'],0),
-                      "open":false,
+                      "open": this.getOpen(this.val(list,[i,'childMenus'],[])),
                       "active":false,
                  });
+          }
+          return t;
+      },
+      getOpen(list){
+          let t = false;
+          for(let i=0;i<list.length;i++){
+            if(list[i].url == this.zRouet){
+              t = true;
+              return t;
+            }
           }
           return t;
       },
@@ -272,8 +282,8 @@
                                      }
                  }
                  .z-menu-c-search{width: 100%;height: 50px;background: #fff;padding: 0 10px;box-sizing: border-box;flex:1;
-                                  .search-icon-input{position: absolute;width: 30px;height: 30px;left: 20px;top: 5px;font-size: 22px;color: #409eff;text-align: center;line-height: 30px;}
-                                  .z-menu-c-s-input{width: 100%;height: 40px;line-height: 40px;padding-left: 50px;border:1px solid #409eff;border-radius: 4px;box-sizing: border-box;outline:none;}
+                                  .search-icon-input{position: absolute;width: 30px;height: 30px;left: 20px;top: 3px;font-size: 22px;color: #409eff;text-align: center;line-height: 30px;}
+                                  .z-menu-c-s-input{width: 100%;height: 36px;line-height: 36px;padding-left: 50px;border:1px solid #409eff;border-radius: 4px;box-sizing: border-box;outline:none;}
                                   .z-menu-c-s-input::-webkit-input-placeholder{
                                           color: #b2b2b2 !important;
                                   }
