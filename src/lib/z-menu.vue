@@ -29,8 +29,8 @@
                   <div class="z-menu-bottom-v">
                         <div class="z-menu-dialog-left">
                             <div class="z-menu-dialog-tow" v-for="(item,index) in moduleData" :key="index">
-                                  <div class="z-menu-m-title" @click.stop="zm_event(item.url)">{{item.name}}</div>
-                                  <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click.stop="zm_event(m.url)"></div>
+                                  <div class="z-menu-m-title" @click.stop="zm_event(t_item,item.url)">{{item.name}}</div>
+                                  <div class="z-menu-m-count" v-if="item.childMenus"  v-for="(m,i) in item.childMenus" :key="i+''+index" v-html="m.html" title="点击前往" @click.stop="zm_event(t_item,m.url)"></div>
                             </div>
                         </div>
                         <div class="z-menu-dialog-right">
@@ -82,6 +82,15 @@
           this.searchMenu();
           return this.moduleData_;
       },
+      t_item(){
+        let item = '';
+          for(let i=0;i<this.data.length;i++){
+            if(this.data[i].id == this.moduleDataId){
+               item = this.data[i];
+            }
+          }
+          return item;
+      },
     },
     data () {
       return {
@@ -118,6 +127,9 @@
            item.active = true;
            this.$emit('selectMenu',item);
         }
+      },
+      zm_event(href,rouet) {
+         this.$emit('zmClick',href,rouet);
       },
       cancelData(list){
           for(let i= 0;i<list.length;i++){
@@ -174,9 +186,6 @@
       select_module(item,id){
            this.moduleDataId = id;
            //this.moduleData = item.childMenus;
-      },
-      zm_event(name,rouet) {
-         this.$emit('zmClick',name,rouet);
       },
       em_mouseover(){
         if(this.showDialog){this.show = true;}else{this.show = true;}
