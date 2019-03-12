@@ -9,7 +9,7 @@
                                 <span>总览</span>
                                 <span class="z-menu-icon-chunk el-icon-arrow-right"></span> 
                           </div>
-                      </div>
+                      </div>  
                       <div class="z-menu-chunk"  v-for="(item,index) in data" :key="index" :style="{height:minWidth,fontSize:fontSize,lineHeight:minWidth,width:maxWidth,background:(item.id == zmSelected ? activebg:background)}" :class="item.id == zmSelected ? 'z-menu-chunk-active':''" @click.stop="zm_event(item,null)">
                           <div class="z-menu-icon" :style="{width:minWidth,lineHeight:minWidth}" :class="item.imgUrl"></div>
                           <div class="z-menu-text">
